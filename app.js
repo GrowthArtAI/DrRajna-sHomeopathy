@@ -1,4 +1,4 @@
-const GOOGLE_REVIEW_URL = "https://search.google.com/local/writereview?placeid=ChIJQ0w0F7K5wjsRzAlDupaKUho&source=g.page.m.ia._&utm_source=gbp&laa=nmx-review-solicitation-ia2";
+const GOOGLE_REVIEW_URL = "https://search.google.com/local/writereview?placeid=ChIJC91NK1e_wjsR_QZcjQBT1Uc";
 const CLINIC_NAME = "Dr Rajna's Homeopathy";
 
 const ratings = {
