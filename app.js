@@ -12,6 +12,123 @@ const $ = id => document.getElementById(id);
 const pick = items => items[Math.floor(Math.random() * items.length)];
 const clean = value => (value || "").trim().replace(/\s+/g, " ");
 
+function injectClinicTheme() {
+  const old = document.getElementById("clinicThemeStyles");
+  if (old) old.remove();
+  const style = document.createElement("style");
+  style.id = "clinicThemeStyles";
+  style.textContent = `
+    :root {
+      --clinic-bg-1: #fbf7f0;
+      --clinic-bg-2: #f1f7f2;
+      --clinic-card: rgba(255, 255, 255, 0.94);
+      --clinic-text: #24312c;
+      --clinic-muted: #66736d;
+      --clinic-primary: #245c4a;
+      --clinic-secondary: #7b5a2e;
+      --clinic-border: #e2d8c8;
+      --clinic-soft: #eef6f0;
+      --clinic-star: #d99000;
+    }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--clinic-text) !important;
+      background:
+        radial-gradient(circle at top left, rgba(216, 236, 221, 0.95), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(241, 225, 199, 0.95), transparent 36%),
+        linear-gradient(135deg, var(--clinic-bg-1), var(--clinic-bg-2)) !important;
+      font-family: Inter, Segoe UI, Roboto, Arial, sans-serif !important;
+    }
+    .container, .app, main, #app, #formScreen, #resultScreen {
+      box-sizing: border-box;
+    }
+    .container, .app, main, #app {
+      max-width: 980px !important;
+      margin: 34px auto !important;
+    }
+    .card, .panel, .box, .form-card, .result-card, section, #formScreen, #resultScreen {
+      border-color: var(--clinic-border) !important;
+      border-radius: 24px !important;
+      box-shadow: 0 20px 55px rgba(36, 92, 74, 0.12) !important;
+    }
+    #formScreen, #resultScreen {
+      background: var(--clinic-card) !important;
+      border: 1px solid var(--clinic-border) !important;
+      padding: 28px !important;
+    }
+    h1, h2, h3, .section-title {
+      color: var(--clinic-primary) !important;
+      letter-spacing: -0.02em;
+    }
+    label, strong, .field-label, .rating-label {
+      color: var(--clinic-text) !important;
+      font-weight: 700 !important;
+    }
+    input, select, textarea {
+      border: 1px solid #d9cdbd !important;
+      background: #fffdf9 !important;
+      border-radius: 14px !important;
+      color: var(--clinic-text) !important;
+      box-shadow: none !important;
+      outline: none !important;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--clinic-primary) !important;
+      box-shadow: 0 0 0 4px rgba(36, 92, 74, 0.12) !important;
+    }
+    .rating-row {
+      border-bottom: 1px dashed #e5dacb !important;
+      padding: 12px 0 !important;
+      margin: 0 !important;
+    }
+    .rating-row:last-child {
+      border-bottom: 0 !important;
+    }
+    .stars, .star {
+      color: var(--clinic-star) !important;
+      letter-spacing: 1px;
+    }
+    button, .btn, #generateBtn {
+      border: 0 !important;
+      border-radius: 16px !important;
+      background: linear-gradient(135deg, #245c4a, #3d8b65) !important;
+      color: #fff !important;
+      box-shadow: 0 12px 24px rgba(36, 92, 74, 0.18) !important;
+      font-weight: 800 !important;
+    }
+    #apiSettingsBtn {
+      background: #eef6f0 !important;
+      color: var(--clinic-primary) !important;
+      box-shadow: none !important;
+      border: 1px solid #d7e6da !important;
+    }
+    #outputClinicHeader {
+      color: var(--clinic-primary) !important;
+      border-bottom: 1px solid var(--clinic-border);
+      padding-bottom: 12px;
+      margin-bottom: 16px !important;
+    }
+    #reviewOutput {
+      min-height: 190px !important;
+      line-height: 1.65 !important;
+      font-size: 15px !important;
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+function removeFieldByText(pattern) {
+  Array.from(document.querySelectorAll("label, strong, .label, .field-label, .rating-label, p, span, div")).forEach(el => {
+    if (el.children.length > 0) return;
+    if (!pattern.test(clean(el.textContent))) return;
+    const field = el.closest(".field, .form-group, .input-group, .rating-row, .row, label");
+    if (field && field !== document.body) field.remove();
+    else el.remove();
+  });
+}
+
+
 function closestField(el) {
   return el ? el.closest("label, .field, .form-group, .input-group, .rating-row, .row, div") : null;
 }
@@ -245,6 +362,7 @@ function setupRatingLabels() {
   setLabelFor("likedMost", "What helped most?");
   if ($("likedMost")) $("likedMost").placeholder = "Example: detailed consultation, clear guidance, follow-up support";
   removeFieldByControlId("specialMention");
+  removeFieldByText(/specific\s*(doctor|dish).*?(staff|service).*mention/i);
 }
 
 function buildStars(id, callback) {
@@ -478,9 +596,13 @@ function saveSettings(event) {
 }
 
 function initialisePage() {
+  injectClinicTheme();
   updateTopText();
   ensureOutputHeader();
   removeFieldByControlId("tone");
+  removeFieldByText(/review\s*tone/i);
+  removeFieldByText(/specific\s*(doctor|dish).*?(staff|service).*mention/i);
+  removeTextElementByPattern(/reviewgen\s*ai\s*v?6\.5/i);
   updateAIStatus();
   setupConcernDropdown();
   setupRatingLabels();
