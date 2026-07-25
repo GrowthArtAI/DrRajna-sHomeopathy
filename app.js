@@ -1,4 +1,4 @@
-const GOOGLE_REVIEW_URL = "https://search.google.com/local/writereview?placeid=ChIJC91NK1e_wjsR_QZcjQBT1Uc";
+const GOOGLE_REVIEW_URL = "https://search.google.com/local/writereview?placeid=ChIJQ0w0F7K5wjsRzAlDupaKUho&source=g.page.m.ia._&utm_source=gbp&laa=nmx-review-solicitation-ia2";
 const CLINIC_NAME = "Dr Rajna's Homeopathy";
 
 const ratings = {
@@ -364,9 +364,6 @@ function initialisePage() {
     $("resultScreen").classList.add("hidden");
     $("formScreen").classList.remove("hidden");
   });
-  $("apiSettingsBtn")?.addEventListener("click", openSettings);
-  $("settingsForm")?.addEventListener("submit", saveSettings);
-  $("cancelSettingsBtn")?.addEventListener("click", () => $("settingsDialog").close());
 }
 
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initialisePage);

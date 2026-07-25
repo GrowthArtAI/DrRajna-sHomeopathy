@@ -1,12 +1,11 @@
 ## Dr Rajna's Homeopathy Review Generator
 
-### Updated fixes
-- Fixed star rating layout so all 5 stars stay in one horizontal row.
-- Made every star rating selectable by click, hover, keyboard focus, Enter, and Space.
-- Removed duplicate generated rating rows.
-- Updated the AI prompt so generated reviews strictly follow selected ratings.
-- Updated the local fallback generator so lower ratings create balanced or negative feedback instead of always-positive wording.
-- Added responsive layout fixes for mobile screens.
+### Latest update
+- Removed the visible Real AI API Settings button.
+- Removed the sentence below it.
+- Removed the API settings popup markup from index.html.
+- Kept star rating selection and review generation working.
+- Purple theme styling retained.
 
 ### Upload to GitHub Pages
 Upload these files directly to your repository root:
