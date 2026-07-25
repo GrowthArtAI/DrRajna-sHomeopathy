@@ -330,6 +330,27 @@ async function copyReview() {
     alert("Review copied successfully!");
   }
 }
+async function copyReviewAndPostOnGoogle() {
+  const output = $("reviewOutput");
+  const review = output ? output.value : "";
+
+  if (output) output.select();
+
+  try {
+    await navigator.clipboard.writeText(review);
+  } catch {
+    try {
+      document.execCommand("copy");
+    } catch (error) {
+      console.warn("Clipboard copy failed", error);
+    }
+  }
+
+  window.open(GOOGLE_REVIEW_URL, "_blank", "noopener,noreferrer");
+
+  alert("Review copied successfully. Google review page opened. Click inside the Google review box and press Ctrl+V to paste.");
+}
+
 
 function openSettings() {
   const s = settings();
@@ -358,8 +379,7 @@ function initialisePage() {
   $("generateBtn")?.addEventListener("click", () => generate());
   $("freshBtn")?.addEventListener("click", () => generate("", true));
   $("rewriteBtn")?.addEventListener("click", () => generate(clean($("customInstruction")?.value), true));
-  $("copyBtn")?.addEventListener("click", copyReview);
-  $("googleBtn")?.addEventListener("click", () => window.open(GOOGLE_REVIEW_URL, "_blank", "noopener,noreferrer"));
+  $("googleBtn")?.addEventListener("click", copyReviewAndPostOnGoogle);
   $("againBtn")?.addEventListener("click", () => {
     $("resultScreen").classList.add("hidden");
     $("formScreen").classList.remove("hidden");
