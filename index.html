@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ReviewGen AI V6.5</title>
+<link rel="stylesheet" href="style.css?v=6.5">
+</head>
+<body>
+<main class="wrap">
+<section class="card">
+<header class="brand">
+<img src="logo.png" class="logo" alt="Shreevallabh Caterers logo" onerror="this.style.display='none';document.querySelector('.fallback').style.display='block'">
+<div class="fallback">श्रीवल्लभ</div>
+<div>
+<p class="tag">ReviewGen AI V6.5</p>
+<h1>Generate natural customer reviews</h1>
+<p class="desc">Creates natural, human-style Google review drafts from event details, ratings, and customer highlights.</p>
+</div>
+</header>
+<div id="aiStatus" class="status">AI Mode: Human-style smart generator</div>
+<section id="formScreen" class="grid">
+<div class="panel">
+<h2>Customer Details</h2>
+<label>Language</label><select id="language"><option>English</option><option>Hindi</option><option>Gujarati</option><option>Marathi</option></select>
+<label>Event Type</label><select id="eventType"><option>Wedding</option><option>Engagement</option><option>Birthday</option><option>Corporate Event</option><option>Reception</option><option>Housewarming</option><option>Festival</option><option>Other</option></select>
+<label>Review Tone</label><select id="tone"><option>Premium & Professional</option><option>Warm & Family Friendly</option><option>Short & Simple</option><option>Royal Wedding Style</option><option>Highly Emotional</option></select>
+<label>Review Length</label><select id="length"><option>Short</option><option>Medium</option><option>Detailed</option></select>
+</div>
+<div class="panel">
+<h2>Ratings & Highlights</h2>
+<div class="rating"><b>Food Quality</b><div id="foodStars" class="stars"></div></div>
+<div class="rating"><b>Service Quality</b><div id="serviceStars" class="stars"></div></div>
+<label>What did the customer like most?</label><textarea id="likedMost" placeholder="Example: food was tasty, service was fast, staff was polite, guests liked sweets"></textarea>
+<label>Specific dish / service mention <span>optional</span></label><input id="specialMention" placeholder="Example: live counter, Gujarati thali, sweets, punctual setup">
+<button id="generateBtn" class="primary">✨ Generate Human-Style Review</button>
+<button id="apiSettingsBtn" class="secondary">⚙️ Real AI API Settings</button>
+<p class="hint">V6.5 writes like a real customer. Lower ratings create polite, balanced reviews instead of fake 5-star language.</p>
+</div>
+</section>
+<section id="resultScreen" class="result hidden">
+<div class="top"><div><p class="tag">Generated Review</p><h2>Your ready-to-post review</h2></div><button id="againBtn" class="secondary small">↺ Edit Details</button></div>
+<textarea id="reviewOutput"></textarea>
+<div class="actions"><button id="freshBtn">✨ New Version</button><button id="copyBtn">📋 Copy Review</button><button id="googleBtn">⭐ Post on Google</button></div>
+<details><summary>Improve this review with custom instruction</summary><input id="customInstruction" placeholder="Example: make it shorter, mention guests, make more emotional"><button id="rewriteBtn" class="secondary">✨ Rewrite Review</button></details>
+</section>
+</section>
+</main>
+<dialog id="settingsDialog"><form class="settings"><h2>Real AI API Settings</h2><p class="hint">Optional. Your key is saved only in this browser using localStorage. If API fails, V6.5 uses the human-style smart generator.</p><label>API Endpoint</label><input id="apiEndpoint" placeholder="https://api.openai.com/v1/chat/completions"><label>Model</label><input id="apiModel" placeholder="gpt-4o-mini"><label>API Key</label><input id="apiKey" type="password" placeholder="Paste API key here"><div class="dialogBtns"><button value="cancel" class="secondary">Cancel</button><button id="saveSettingsBtn" class="primary">Save Settings</button></div></form></dialog>
+<script src="app.js?v=6.5"></script>
+</body>
+</html>
