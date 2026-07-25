@@ -1,17 +1,14 @@
 const GOOGLE_REVIEW_URL = "https://search.google.com/local/writereview?placeid=ChIJQ0w0F7K5wjsRzAlDupaKUho&source=g.page.m.ia._&utm_source=gbp&laa=nmx-review-solicitation-ia2";
 const CLINIC_NAME = "Dr Rajna's Homeopathy";
-
 let treatmentEffectivenessRating = 5;
 let doctorApproachRating = 5;
 let clinicAmbienceRating = 5;
 let staffBehaviorRating = 5;
 let valueForMoneyRating = 5;
 let lastData = null;
-
 const $ = id => document.getElementById(id);
 const pick = items => items[Math.floor(Math.random() * items.length)];
 const clean = value => (value || "").trim().replace(/\s+/g, " ");
-
 function injectClinicTheme() {
   const old = document.getElementById("clinicThemeStyles");
   if (old) old.remove();
@@ -77,17 +74,76 @@ function injectClinicTheme() {
       border-color: var(--clinic-primary) !important;
       box-shadow: 0 0 0 4px rgba(36, 92, 74, 0.12) !important;
     }
+
+    /* Fix: keep every rating label and its 5 stars inside the rating card.
+       The previous layout could inherit wide/absolute star styling from the host page,
+       which made stars overflow to the right side of the screen. */
     .rating-row {
+      display: grid !important;
+      grid-template-columns: minmax(0, 1fr) 118px !important;
+      align-items: center !important;
+      column-gap: 14px !important;
       border-bottom: 1px dashed #e5dacb !important;
       padding: 12px 0 !important;
       margin: 0 !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      overflow: hidden !important;
+      position: relative !important;
     }
     .rating-row:last-child {
       border-bottom: 0 !important;
     }
+    .rating-row label,
+    .rating-row .rating-label,
+    .rating-row strong {
+      min-width: 0 !important;
+      max-width: 100% !important;
+      white-space: normal !important;
+      overflow-wrap: anywhere !important;
+      line-height: 1.25 !important;
+    }
+    .rating-row .stars,
+    .rating-row [id$="Stars"] {
+      display: flex !important;
+      flex-wrap: nowrap !important;
+      align-items: center !important;
+      justify-content: flex-end !important;
+      gap: 4px !important;
+      width: 118px !important;
+      min-width: 118px !important;
+      max-width: 118px !important;
+      height: auto !important;
+      line-height: 1 !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      position: static !important;
+      inset: auto !important;
+      transform: none !important;
+      float: none !important;
+      text-align: right !important;
+    }
+    .rating-row .star,
+    .stars .star {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 19px !important;
+      min-width: 19px !important;
+      max-width: 19px !important;
+      height: 22px !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      color: var(--clinic-star) !important;
+      font-size: 20px !important;
+      line-height: 1 !important;
+      letter-spacing: 0 !important;
+      cursor: pointer !important;
+      position: static !important;
+      transform: none !important;
+    }
     .stars, .star {
       color: var(--clinic-star) !important;
-      letter-spacing: 1px;
     }
     button, .btn, #generateBtn {
       border: 0 !important;
@@ -114,10 +170,35 @@ function injectClinicTheme() {
       line-height: 1.65 !important;
       font-size: 15px !important;
     }
+    @media (max-width: 720px) {
+      .container, .app, main, #app {
+        max-width: calc(100vw - 24px) !important;
+        margin: 16px auto !important;
+      }
+      #formScreen, #resultScreen {
+        padding: 18px !important;
+      }
+      .rating-row {
+        grid-template-columns: minmax(0, 1fr) 110px !important;
+        column-gap: 10px !important;
+      }
+      .rating-row .stars,
+      .rating-row [id$="Stars"] {
+        width: 110px !important;
+        min-width: 110px !important;
+        max-width: 110px !important;
+      }
+      .rating-row .star,
+      .stars .star {
+        width: 18px !important;
+        min-width: 18px !important;
+        max-width: 18px !important;
+        font-size: 19px !important;
+      }
+    }
   `;
   document.head.appendChild(style);
 }
-
 function removeFieldByText(pattern) {
   Array.from(document.querySelectorAll("label, strong, .label, .field-label, .rating-label, p, span, div")).forEach(el => {
     if (el.children.length > 0) return;
@@ -127,16 +208,12 @@ function removeFieldByText(pattern) {
     else el.remove();
   });
 }
-
-
 function closestField(el) {
   return el ? el.closest("label, .field, .form-group, .input-group, .rating-row, .row, div") : null;
 }
-
 function setText(el, text) {
   if (el) el.textContent = text;
 }
-
 function setLabelFor(controlId, labelText) {
   const control = $(controlId);
   if (!control) return;
@@ -149,7 +226,6 @@ function setLabelFor(controlId, labelText) {
   const label = field ? field.querySelector("label, .label, .field-label, .rating-label, strong") : null;
   if (label && label !== control) label.textContent = labelText;
 }
-
 function removeFieldByControlId(controlId) {
   const control = $(controlId);
   if (!control) return;
@@ -170,22 +246,18 @@ function removeFieldByControlId(controlId) {
   }
   control.remove();
 }
-
 function removeTextElementByPattern(pattern) {
   Array.from(document.querySelectorAll("h1, h2, h3, h4, .title, .brand-title, .app-title, .logo-title, span, p, div")).forEach(el => {
     if (el.children.length > 0) return;
     if (pattern.test(clean(el.textContent))) el.remove();
   });
 }
-
 function languageElement() {
   return $("language");
 }
-
 function concernElement() {
   return $("treatmentConcern") || $("eventType");
 }
-
 function ratingId(name) {
   const legacyFirstRatingId = ["fo", "odStars"].join("");
   return {
@@ -196,18 +268,15 @@ function ratingId(name) {
     value: "valueForMoneyStars"
   }[name];
 }
-
 function updateTopText() {
   removeTextElementByPattern(/reviewgen|review gen|ai v/i);
   document.title = `${CLINIC_NAME} Review Generator`;
-
   const oldHeadings = Array.from(document.querySelectorAll("h1, h2, .hero h1, .heading h1"));
   oldHeadings.forEach(heading => {
     const text = clean(heading.textContent).toLowerCase();
     if (text === "generate natural customer reviews") heading.textContent = CLINIC_NAME;
   });
 }
-
 function ensureOutputHeader() {
   const resultScreen = $("resultScreen");
   if (!resultScreen) return;
@@ -226,7 +295,6 @@ function ensureOutputHeader() {
   }
   header.textContent = CLINIC_NAME;
 }
-
 function ensureCustomConcernInput() {
   let custom = $("customTreatmentConcern") || $("customEventType");
   const concern = concernElement();
@@ -243,16 +311,13 @@ function ensureCustomConcernInput() {
   custom.style.marginTop = "8px";
   return custom;
 }
-
 function setupConcernDropdown() {
   const language = languageElement();
   if (language) setLabelFor("language", "Language");
-
   const concern = concernElement();
   if (!concern) return;
   concern.name = "treatmentConcern";
   setLabelFor(concern.id, "Treatment / Concern");
-
   if (concern.tagName === "SELECT") {
     const options = [
       ["", ""],
@@ -277,7 +342,6 @@ function setupConcernDropdown() {
   } else {
     concern.placeholder = "Enter treatment / concern";
   }
-
   const custom = ensureCustomConcernInput();
   function toggleCustomConcern() {
     const show = concern.value === "Other";
@@ -289,85 +353,78 @@ function setupConcernDropdown() {
   concern.addEventListener("change", toggleCustomConcern);
   toggleCustomConcern();
 }
-
 function removeOldGeneratedRatings() {
   document.querySelectorAll(".generated-clinic-rating-row").forEach(row => row.remove());
 }
-
 function makeRatingRow(labelText, id) {
   const row = document.createElement("div");
   row.className = "rating-row generated-clinic-rating-row";
-  row.style.display = "flex";
-  row.style.justifyContent = "space-between";
+  row.style.display = "grid";
+  row.style.gridTemplateColumns = "minmax(0, 1fr) 118px";
   row.style.alignItems = "center";
-  row.style.gap = "12px";
-  row.style.margin = "14px 0";
-
+  row.style.columnGap = "14px";
+  row.style.width = "100%";
+  row.style.maxWidth = "100%";
+  row.style.overflow = "hidden";
   const label = document.createElement("label");
   label.setAttribute("for", id);
   label.textContent = labelText;
   label.style.fontWeight = "700";
-
   const stars = document.createElement("div");
   stars.id = id;
   stars.className = "stars";
-
   row.appendChild(label);
   row.appendChild(stars);
   return row;
 }
-
 function normaliseExistingRating(controlId, labelText) {
   const control = $(controlId);
   if (!control) return null;
   setLabelFor(controlId, labelText);
+  control.classList.add("stars");
   const row = closestField(control);
   if (row) {
-    row.style.display = "flex";
-    row.style.justifyContent = "space-between";
+    row.classList.add("rating-row");
+    row.style.display = "grid";
+    row.style.gridTemplateColumns = "minmax(0, 1fr) 118px";
     row.style.alignItems = "center";
-    row.style.gap = "12px";
+    row.style.columnGap = "14px";
+    row.style.width = "100%";
+    row.style.maxWidth = "100%";
+    row.style.overflow = "hidden";
   }
   return row;
 }
-
 function setupRatingLabels() {
   removeOldGeneratedRatings();
-
   const firstId = ratingId("treatment");
   const secondId = ratingId("doctor");
-
   const firstControl = $(firstId);
   if (firstControl && firstControl.id !== "treatmentEffectivenessStars") firstControl.id = "treatmentEffectivenessStars";
   const secondControl = $(secondId);
   if (secondControl && secondControl.id !== "doctorApproachStars") secondControl.id = "doctorApproachStars";
-
   const treatmentRow = normaliseExistingRating("treatmentEffectivenessStars", "Treatment Effectiveness ★");
   const doctorRow = normaliseExistingRating("doctorApproachStars", "Doctor's Approach / Listening ★");
-
   const anchor = doctorRow || treatmentRow;
   const parent = anchor ? anchor.parentNode : null;
   const before = $("likedMost") ? closestField($("likedMost")) : null;
-
   const rows = [
     makeRatingRow("Clinic Cleanliness/Ambience ★", "clinicAmbienceStars"),
     makeRatingRow("Staff Behavior ★", "staffBehaviorStars"),
     makeRatingRow("Value for Money ★", "valueForMoneyStars")
   ];
-
   if (parent && before && before.parentNode === parent) rows.forEach(row => parent.insertBefore(row, before));
   else if (anchor && parent) rows.forEach(row => parent.insertBefore(row, anchor.nextSibling));
   else rows.forEach(row => ($("formScreen") || document.body).appendChild(row));
-
   setLabelFor("likedMost", "What helped most?");
   if ($("likedMost")) $("likedMost").placeholder = "Example: detailed consultation, clear guidance, follow-up support";
   removeFieldByControlId("specialMention");
   removeFieldByText(/specific\s*(doctor|dish).*?(staff|service).*mention/i);
 }
-
 function buildStars(id, callback) {
   const container = $(id);
   if (!container) return;
+  container.classList.add("stars");
   container.innerHTML = "";
   for (let i = 1; i <= 5; i++) {
     const star = document.createElement("span");
@@ -381,7 +438,6 @@ function buildStars(id, callback) {
     container.appendChild(star);
   }
 }
-
 function readInputs() {
   const concern = concernElement();
   const selectedConcern = clean(concern ? concern.value : "");
@@ -398,7 +454,6 @@ function readInputs() {
     valueForMoneyRating
   };
 }
-
 function averageRating(data) {
   return (
     data.treatmentEffectivenessRating +
@@ -408,12 +463,10 @@ function averageRating(data) {
     data.valueForMoneyRating
   ) / 5;
 }
-
 function concernLine(concern) {
   const text = clean(concern);
   return text ? `I visited ${CLINIC_NAME} for ${text}.` : `I visited ${CLINIC_NAME} for a consultation.`;
 }
-
 function ratingSentence(kind, rating) {
   const bucket = rating >= 5 ? 5 : rating === 4 ? 4 : rating === 3 ? 3 : 1;
   const sentences = {
@@ -450,12 +503,10 @@ function ratingSentence(kind, rating) {
   };
   return pick(sentences[kind][bucket]);
 }
-
 function highlightSentence(data) {
   if (!data.likedMost) return "";
   return pick([`I especially liked ${data.likedMost}.`, `What stood out for me was ${data.likedMost}.`]);
 }
-
 function closingSentence(data) {
   if (averageRating(data) >= 4) {
     return pick([
@@ -470,7 +521,6 @@ function closingSentence(data) {
     "I appreciate the effort from the clinic team and hope the improvement areas are taken positively."
   ]);
 }
-
 function englishReview(data) {
   const pieces = [
     concernLine(data.treatmentConcern),
@@ -482,7 +532,6 @@ function englishReview(data) {
     highlightSentence(data),
     closingSentence(data)
   ].filter(Boolean);
-
   let review = pieces.join(" ");
   if (data.length === "Short") {
     review = [pieces[0], pieces[1], pieces[2], closingSentence(data)].filter(Boolean).join(" ");
@@ -492,27 +541,21 @@ function englishReview(data) {
   }
   return review.replace(/\s+/g, " ").trim();
 }
-
 function localReview(data) {
   if (data.language === "English") return englishReview(data);
   const concern = data.treatmentConcern || "consultation";
   const good = averageRating(data) >= 4;
-
   if (data.language === "Hindi") {
     return `मैं ${concern} के लिए ${CLINIC_NAME} गया/गई। डॉक्टर ने ध्यान से सुना और शांत तरीके से समझाया। क्लिनिक साफ और आरामदायक लगा, और स्टाफ भी सहयोगी रहा।${data.likedMost ? ` मुझे खास तौर पर ${data.likedMost} पसंद आया।` : ""}${good ? "कुल मिलाकर अनुभव अच्छा रहा और मैं similar concerns के लिए recommend करूंगा/करूंगी।" : "कुल मिलाकर अनुभव ठीक रहा, कुछ जगह सुधार की गुंजाइश है।"}`;
   }
-
   if (data.language === "Gujarati") {
     return `હું ${concern} માટે ${CLINIC_NAME} ગયો/ગઈ હતો/હતી. ડૉક્ટરે ધ્યાનથી સાંભળ્યું અને શાંતિથી સમજાવ્યું. ક્લિનિક સાફ અને આરામદાયક લાગ્યું, અને સ્ટાફ પણ સહયોગી રહ્યો.${data.likedMost ? ` મને ખાસ કરીને ${data.likedMost} ગમ્યું.` : ""}${good ? "કુલ મળીને અનુભવ સારો રહ્યો અને હું જરૂરથી recommend કરીશ." : "કુલ અનુભવ ઠીક રહ્યો, થોડા સુધારા માટે જગ્યા છે."}`;
   }
-
   if (data.language === "Marathi") {
     return `मी ${concern} साठी ${CLINIC_NAME} ला भेट दिली. डॉक्टरांनी लक्षपूर्वक ऐकले आणि शांतपणे मार्गदर्शन केले. क्लिनिक स्वच्छ आणि आरामदायक वाटले, आणि स्टाफही सहकार्य करणारा होता.${data.likedMost ? ` ${data.likedMost} खास आवडले.` : ""}${good ? "एकूण अनुभव चांगला राहिला आणि similar concerns साठी मी नक्की recommend करेन." : "एकूण अनुभव ठीक होता, काही सुधारणा केल्या तर अजून चांगले होईल."}`;
   }
-
   return englishReview(data);
 }
-
 function settings() {
   return {
     endpoint: localStorage.getItem("reviewgen_api_endpoint") || "",
@@ -520,18 +563,14 @@ function settings() {
     key: localStorage.getItem("reviewgen_api_key") || ""
   };
 }
-
 function updateAIStatus() {
   const status = $("aiStatus");
   if (status) status.remove();
 }
-
 async function callAI(data, instruction = "") {
   const s = settings();
   if (!s.endpoint || !s.key) return null;
-
   const prompt = `Write one natural first-person Google review for ${CLINIC_NAME}. Do not say "customer feedback". Do not mention "selected ratings". Do not provide medical advice, diagnosis, dosage, cure guarantees, or exaggerated claims. Treatment/Concern:${data.treatmentConcern || "not specified"}. Language:${data.language}. Length:${data.length}. Treatment effectiveness:${data.treatmentEffectivenessRating}/5. Doctor approach/listening:${data.doctorApproachRating}/5. Clinic cleanliness/ambience:${data.clinicAmbienceRating}/5. Staff behavior:${data.staffBehaviorRating}/5. Value for money:${data.valueForMoneyRating}/5. Visitor liked:${data.likedMost || "not specified"}. Extra instruction:${instruction || "none"}. If ratings are below 4, write balanced polite feedback. Output only the review text.`;
-
   const response = await fetch(s.endpoint, {
     method: "POST",
     headers: {
@@ -549,12 +588,10 @@ async function callAI(data, instruction = "") {
       frequency_penalty: 0.4
     })
   });
-
   if (!response.ok) throw new Error("AI API error " + response.status);
   const json = await response.json();
   return json.choices?.[0]?.message?.content?.trim() || null;
 }
-
 async function generate(instruction = "", useLast = false) {
   const data = useLast && lastData ? lastData : readInputs();
   lastData = data;
@@ -570,14 +607,12 @@ async function generate(instruction = "", useLast = false) {
   $("formScreen").classList.add("hidden");
   $("resultScreen").classList.remove("hidden");
 }
-
 function copyReview() {
   const output = $("reviewOutput");
   output.select();
   navigator.clipboard.writeText(output.value);
   alert("Review copied successfully!");
 }
-
 function openSettings() {
   const s = settings();
   $("apiEndpoint").value = s.endpoint;
@@ -585,7 +620,6 @@ function openSettings() {
   $("apiKey").value = s.key;
   $("settingsDialog").showModal();
 }
-
 function saveSettings(event) {
   event.preventDefault();
   localStorage.setItem("reviewgen_api_endpoint", $("apiEndpoint").value.trim());
@@ -594,7 +628,6 @@ function saveSettings(event) {
   $("settingsDialog").close();
   updateAIStatus();
 }
-
 function initialisePage() {
   injectClinicTheme();
   updateTopText();
@@ -613,10 +646,8 @@ function initialisePage() {
   buildStars("valueForMoneyStars", value => valueForMoneyRating = value);
   updateAIStatus();
 }
-
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initialisePage);
 else initialisePage();
-
 if ($("generateBtn")) $("generateBtn").onclick = () => generate();
 if ($("freshBtn")) $("freshBtn").onclick = () => generate("", true);
 if ($("rewriteBtn")) $("rewriteBtn").onclick = () => generate($("customInstruction").value.trim(), true);
