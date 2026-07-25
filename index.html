@@ -1,142 +1,147 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Dr Rajna's Homeopathy Review Generator</title>
-<link rel="stylesheet" href="style.css?v=clinic-1">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Dr Rajna's Homeopathy Review Generator</title>
+  <link rel="stylesheet" href="style.css?v=clinic-2">
 </head>
 <body>
-<main class="wrap">
-<section class="card">
-  <header class="brand">
-    <img src="logo.png" class="logo" alt="Dr Rajna's Homeopathy logo" onerror="this.style.display='none';document.querySelector('.fallback').style.display='block'">
-    <div class="fallback">DR</div>
-    <div>
-      <p class="tag">Review Generator</p>
-      <h1>Dr Rajna's Homeopathy</h1>
-      <p class="desc">Generate natural patient experience reviews for Google based on treatment concern, ratings, and visit highlights.</p>
-    </div>
-  </header>
+  <main class="wrap">
+    <section class="card">
+      <header class="brand">
+        <img src="logo.png" class="logo" alt="Dr Rajna's Homeopathy logo" onerror="this.style.display='none';document.querySelector('.fallback').style.display='block'">
+        <div class="fallback">DR</div>
+        <div>
+          <p class="tag">Review Generator</p>
+          <h1>Dr Rajna's Homeopathy</h1>
+          <p class="desc">Generate natural patient experience reviews for Google based on treatment concern, selected ratings, and visit highlights.</p>
+        </div>
+      </header>
 
-  <div id="aiStatus" class="status">AI Mode: Human-style smart generator</div>
+      <div id="aiStatus" class="status">AI Mode: Human-style smart generator</div>
 
-  <section id="formScreen" class="grid">
-    <div class="panel">
-      <h2>Patient Details</h2>
+      <section id="formScreen" class="grid">
+        <div class="panel patient-panel">
+          <h2>Patient Details</h2>
 
-      <label for="language">Language</label>
-      <select id="language">
-        <option>English</option>
-        <option>Hindi</option>
-        <option>Gujarati</option>
-        <option>Marathi</option>
-      </select>
+          <label for="language">Language</label>
+          <select id="language">
+            <option>English</option>
+            <option>Hindi</option>
+            <option>Gujarati</option>
+            <option>Marathi</option>
+          </select>
 
-      <label for="treatmentConcern">Treatment / Concern</label>
-      <select id="treatmentConcern">
-        <option value=""></option>
-        <option>Skin (Acne, Eczema, Psoriasis)</option>
-        <option>Hair Fall</option>
-        <option>Allergies</option>
-        <option>Chronic Illness Management</option>
-        <option>Hormonal/PCOS</option>
-        <option>Digestive Issues</option>
-        <option>Stress/Anxiety</option>
-        <option>Pediatric Care</option>
-        <option>Immunity Building</option>
-        <option>Other</option>
-      </select>
+          <label for="treatmentConcern">Treatment / Concern</label>
+          <select id="treatmentConcern">
+            <option value=""></option>
+            <option>Skin (Acne, Eczema, Psoriasis)</option>
+            <option>Hair Fall</option>
+            <option>Allergies</option>
+            <option>Chronic Illness Management</option>
+            <option>Hormonal/PCOS</option>
+            <option>Digestive Issues</option>
+            <option>Stress/Anxiety</option>
+            <option>Pediatric Care</option>
+            <option>Immunity Building</option>
+            <option>Other</option>
+          </select>
+          <input id="customTreatmentConcern" class="hidden" autocomplete="off" placeholder="Enter treatment / concern">
 
-      <label for="length">Review Length</label>
-      <select id="length">
-        <option>Short</option>
-        <option>Medium</option>
-        <option>Detailed</option>
-      </select>
-    </div>
+          <label for="length">Review Length</label>
+          <select id="length">
+            <option>Short</option>
+            <option>Medium</option>
+            <option>Detailed</option>
+          </select>
+        </div>
 
-    <div class="panel">
-      <h2>Ratings & Highlights</h2>
+        <div class="panel rating-panel">
+          <h2>Ratings & Highlights</h2>
 
-      <div class="rating">
-        <b>Treatment Effectiveness ★</b>
-        <div id="treatmentEffectivenessStars" class="stars"></div>
+          <div class="rating" data-rating-row>
+            <label id="treatmentEffectivenessLabel" for="treatmentEffectivenessStars">Treatment Effectiveness</label>
+            <div id="treatmentEffectivenessStars" class="stars" role="radiogroup" aria-labelledby="treatmentEffectivenessLabel"></div>
+          </div>
+
+          <div class="rating" data-rating-row>
+            <label id="doctorApproachLabel" for="doctorApproachStars">Doctor's Approach / Listening</label>
+            <div id="doctorApproachStars" class="stars" role="radiogroup" aria-labelledby="doctorApproachLabel"></div>
+          </div>
+
+          <div class="rating" data-rating-row>
+            <label id="clinicAmbienceLabel" for="clinicAmbienceStars">Clinic Cleanliness/Ambience</label>
+            <div id="clinicAmbienceStars" class="stars" role="radiogroup" aria-labelledby="clinicAmbienceLabel"></div>
+          </div>
+
+          <div class="rating" data-rating-row>
+            <label id="staffBehaviorLabel" for="staffBehaviorStars">Staff Behavior</label>
+            <div id="staffBehaviorStars" class="stars" role="radiogroup" aria-labelledby="staffBehaviorLabel"></div>
+          </div>
+
+          <div class="rating" data-rating-row>
+            <label id="valueForMoneyLabel" for="valueForMoneyStars">Value for Money</label>
+            <div id="valueForMoneyStars" class="stars" role="radiogroup" aria-labelledby="valueForMoneyLabel"></div>
+          </div>
+
+          <label for="likedMost">What helped most?</label>
+          <textarea id="likedMost" placeholder="Example: detailed consultation, clear guidance, follow-up support"></textarea>
+
+          <button id="generateBtn" class="primary" type="button">✨ Generate Human-Style Review</button>
+          <button id="apiSettingsBtn" class="secondary" type="button">⚙️ Real AI API Settings</button>
+          <p class="hint">Click stars to select ratings. Lower ratings create fair feedback instead of fake perfect language.</p>
+        </div>
+      </section>
+
+      <section id="resultScreen" class="result hidden">
+        <div class="top">
+          <div>
+            <p class="tag">Generated Review</p>
+            <h2 id="outputClinicHeader">Dr Rajna's Homeopathy</h2>
+            <p class="desc">Your ready-to-post review</p>
+          </div>
+          <button id="againBtn" class="secondary small" type="button">↺ Edit Details</button>
+        </div>
+
+        <textarea id="reviewOutput"></textarea>
+
+        <div class="actions">
+          <button id="freshBtn" type="button">✨ New Version</button>
+          <button id="copyBtn" type="button">📋 Copy Review</button>
+          <button id="googleBtn" type="button">⭐ Post on Google</button>
+        </div>
+
+        <details>
+          <summary>Improve this review with custom instruction</summary>
+          <input id="customInstruction" placeholder="Example: make it shorter, mention clear guidance, make it more simple">
+          <button id="rewriteBtn" class="secondary" type="button">✨ Rewrite Review</button>
+        </details>
+      </section>
+    </section>
+  </main>
+
+  <dialog id="settingsDialog">
+    <form id="settingsForm" class="settings" method="dialog">
+      <h2>Real AI API Settings</h2>
+      <p class="hint">Optional. Your key is saved only in this browser using localStorage. If API fails, the human-style smart generator will be used.</p>
+
+      <label for="apiEndpoint">API Endpoint</label>
+      <input id="apiEndpoint" placeholder="https://api.openai.com/v1/chat/completions">
+
+      <label for="apiModel">Model</label>
+      <input id="apiModel" placeholder="gpt-4o-mini">
+
+      <label for="apiKey">API Key</label>
+      <input id="apiKey" type="password" placeholder="Paste API key here">
+
+      <div class="dialogBtns">
+        <button value="cancel" class="secondary" type="button" id="cancelSettingsBtn">Cancel</button>
+        <button id="saveSettingsBtn" class="primary" type="submit">Save Settings</button>
       </div>
+    </form>
+  </dialog>
 
-      <div class="rating">
-        <b>Doctor's Approach / Listening ★</b>
-        <div id="doctorApproachStars" class="stars"></div>
-      </div>
-
-      <div class="rating">
-        <b>Clinic Cleanliness/Ambience ★</b>
-        <div id="clinicAmbienceStars" class="stars"></div>
-      </div>
-
-      <div class="rating">
-        <b>Staff Behavior ★</b>
-        <div id="staffBehaviorStars" class="stars"></div>
-      </div>
-
-      <div class="rating">
-        <b>Value for Money ★</b>
-        <div id="valueForMoneyStars" class="stars"></div>
-      </div>
-
-      <label for="likedMost">What helped most?</label>
-      <textarea id="likedMost" placeholder="Example: detailed consultation, clear guidance, follow-up support"></textarea>
-
-      <button id="generateBtn" class="primary">✨ Generate Human-Style Review</button>
-      <button id="apiSettingsBtn" class="secondary">⚙️ Real AI API Settings</button>
-      <p class="hint">Creates polite and balanced clinic reviews. Lower ratings create fair feedback instead of fake perfect language.</p>
-    </div>
-  </section>
-
-  <section id="resultScreen" class="result hidden">
-    <div class="top">
-      <div>
-        <p class="tag">Generated Review</p>
-        <h2 id="outputClinicHeader">Dr Rajna's Homeopathy</h2>
-        <p class="desc">Your ready-to-post review</p>
-      </div>
-      <button id="againBtn" class="secondary small">↺ Edit Details</button>
-    </div>
-
-    <textarea id="reviewOutput"></textarea>
-
-    <div class="actions">
-      <button id="freshBtn">✨ New Version</button>
-      <button id="copyBtn">📋 Copy Review</button>
-      <button id="googleBtn">⭐ Post on Google</button>
-    </div>
-
-    <details>
-      <summary>Improve this review with custom instruction</summary>
-      <input id="customInstruction" placeholder="Example: make it shorter, mention clear guidance, make it more simple">
-      <button id="rewriteBtn" class="secondary">✨ Rewrite Review</button>
-    </details>
-  </section>
-</section>
-</main>
-
-<dialog id="settingsDialog">
-  <form class="settings">
-    <h2>Real AI API Settings</h2>
-    <p class="hint">Optional. Your key is saved only in this browser using localStorage. If API fails, the human-style smart generator will be used.</p>
-    <label for="apiEndpoint">API Endpoint</label>
-    <input id="apiEndpoint" placeholder="https://api.openai.com/v1/chat/completions">
-    <label for="apiModel">Model</label>
-    <input id="apiModel" placeholder="gpt-4o-mini">
-    <label for="apiKey">API Key</label>
-    <input id="apiKey" type="password" placeholder="Paste API key here">
-    <div class="dialogBtns">
-      <button value="cancel" class="secondary">Cancel</button>
-      <button id="saveSettingsBtn" class="primary">Save Settings</button>
-    </div>
-  </form>
-</dialog>
-
-<script src="app.js?v=clinic-1"></script>
+  <script src="app.js?v=clinic-2"></script>
 </body>
 </html>
