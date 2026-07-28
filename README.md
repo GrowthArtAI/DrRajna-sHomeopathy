@@ -2,11 +2,11 @@
 
 #### Latest update
 - Removed Value for Money completely from the form and review logic.
-- Removed the extra hardcoded star from every rating label.
-- Fixed rating star rendering by using a JavaScript Unicode escape instead of a pasted star symbol.
+- Removed the extra hardcoded star from each rating label.
+- Fixed selectable star ratings by using an HTML star entity in JavaScript.
 - Ratings now use 4 categories only.
 - Updated theme colors to #6F4BA0 and #573173.
-- Updated cache version to clinic-6.
+- Updated cache version to clinic-7.
 
 #### Upload to GitHub Pages
 Upload these files directly to your repository root and replace existing files:
@@ -17,3 +17,4 @@ Upload these files directly to your repository root and replace existing files:
 - README.md
 
 Important: upload the files themselves, not the folder.
+After upload, hard refresh the website with Ctrl + Shift + R or Ctrl + F5.

@@ -5,7 +5,7 @@ const ratings = {
   treatmentEffectivenessRating: 5,
   doctorApproachRating: 5,
   clinicAmbienceRating: 5,
-  staffBehaviorRating: 5,
+  staffBehaviorRating: 5
 };
 
 let lastData = null;
@@ -49,7 +49,7 @@ function buildStars(containerId, ratingKey) {
     const star = document.createElement("button");
     star.type = "button";
     star.className = "star";
-    star.textContent = "\u2605";
+    star.innerHTML = "&#9733;";
     star.title = `${i} star${i > 1 ? "s" : ""}`;
     star.setAttribute("role", "radio");
     star.setAttribute("aria-label", `${i} star${i > 1 ? "s" : ""}`);
@@ -263,7 +263,6 @@ Treatment effectiveness: ${data.treatmentEffectivenessRating}/5
 Doctor approach/listening: ${data.doctorApproachRating}/5
 Clinic cleanliness/ambience: ${data.clinicAmbienceRating}/5
 Staff behavior: ${data.staffBehaviorRating}/5
-Value for money: ${}/5
 Visitor liked: ${data.likedMost || "not specified"}
 Extra instruction: ${instruction || "none"}
 Output only the review text.`;
