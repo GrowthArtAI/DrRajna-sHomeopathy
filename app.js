@@ -6,7 +6,6 @@ const ratings = {
   doctorApproachRating: 5,
   clinicAmbienceRating: 5,
   staffBehaviorRating: 5,
-  valueForMoneyRating: 5
 };
 
 let lastData = null;
@@ -50,7 +49,7 @@ function buildStars(containerId, ratingKey) {
     const star = document.createElement("button");
     star.type = "button";
     star.className = "star";
-    star.textContent = "★";
+    star.textContent = "\u2605";
     star.title = `${i} star${i > 1 ? "s" : ""}`;
     star.setAttribute("role", "radio");
     star.setAttribute("aria-label", `${i} star${i > 1 ? "s" : ""}`);
@@ -95,9 +94,8 @@ function averageRating(data) {
     data.treatmentEffectivenessRating +
     data.doctorApproachRating +
     data.clinicAmbienceRating +
-    data.staffBehaviorRating +
-    data.valueForMoneyRating
-  ) / 5;
+    data.staffBehaviorRating
+  ) / 4;
 }
 
 function ratingTone(rating) {
@@ -137,13 +135,6 @@ function sentenceFor(category, rating) {
       3: ["Staff behavior was okay, though coordination could be better."],
       2: ["Staff coordination and responsiveness could be improved for a smoother visit."],
       1: ["The staff experience was not satisfactory and needs improvement." ]
-    },
-    value: {
-      5: ["Overall, the consultation felt worth the money.", "The overall value felt fair and satisfying."],
-      4: ["The experience felt reasonably priced overall.", "Value for money was good overall."],
-      3: ["Value for money felt average and could be better."],
-      2: ["The value for money did not feel fully justified to me."],
-      1: ["The overall value for money was disappointing." ]
     }
   };
   return pick(bank[category][rating] || bank[category][1]);
@@ -166,8 +157,7 @@ function closingSentence(data) {
     data.treatmentEffectivenessRating,
     data.doctorApproachRating,
     data.clinicAmbienceRating,
-    data.staffBehaviorRating,
-    data.valueForMoneyRating
+    data.staffBehaviorRating
   );
 
   if (avg >= 4.6 && minRating >= 4) {
@@ -205,7 +195,6 @@ function englishReview(data) {
     sentenceFor("doctor", data.doctorApproachRating),
     sentenceFor("clinic", data.clinicAmbienceRating),
     sentenceFor("staff", data.staffBehaviorRating),
-    sentenceFor("value", data.valueForMoneyRating),
     highlightSentence(data),
     closingSentence(data)
   ].filter(Boolean);
@@ -214,7 +203,7 @@ function englishReview(data) {
   if (data.length === "Short") {
     review = [pieces[0], pieces[1], pieces[2], closingSentence(data)].filter(Boolean).join(" ");
   } else if (data.length === "Detailed") {
-    review = pieces.join(" ") + " This review is based on my experience with the consultation, clinic environment, staff support, and overall value.";
+    review = pieces.join(" ") + " This review is based on my experience with the consultation, clinic environment, and staff support.";
   } else {
     review = pieces.join(" ");
   }
@@ -231,15 +220,15 @@ function localReview(data) {
   const mixed = avg >= 2.5 && avg < 4;
 
   if (data.language === "Hindi") {
-    return `मैं ${concern} के लिए ${CLINIC_NAME} गया/गई। मेरा overall rating experience ${avg.toFixed(1)}/5 रहा। डॉक्टर की listening ${ratingTone(data.doctorApproachRating)} लगी, treatment experience ${ratingTone(data.treatmentEffectivenessRating)} रहा, clinic cleanliness ${ratingTone(data.clinicAmbienceRating)} लगी, staff behavior ${ratingTone(data.staffBehaviorRating)} रहा, और value for money ${ratingTone(data.valueForMoneyRating)} लगा।${data.likedMost ? ` मुझे खास तौर पर ${data.likedMost} अच्छा लगा।` : ""}${good ? " कुल मिलाकर अनुभव अच्छा रहा।" : mixed ? " कुल मिलाकर अनुभव मिला-जुला रहा और कुछ सुधार की गुंजाइश है।" : " कुल मिलाकर अनुभव संतोषजनक नहीं रहा और सुधार की जरूरत है।"}`;
+    return `मैं ${concern} के लिए ${CLINIC_NAME} गया/गई। मेरा overall rating experience ${avg.toFixed(1)}/5 रहा। डॉक्टर की listening ${ratingTone(data.doctorApproachRating)} लगी, treatment experience ${ratingTone(data.treatmentEffectivenessRating)} रहा, clinic cleanliness ${ratingTone(data.clinicAmbienceRating)} लगी, staff behavior ${ratingTone(data.staffBehaviorRating)} रहा।${data.likedMost ? ` मुझे खास तौर पर ${data.likedMost} अच्छा लगा।` : ""}${good ? " कुल मिलाकर अनुभव अच्छा रहा।" : mixed ? " कुल मिलाकर अनुभव मिला-जुला रहा और कुछ सुधार की गुंजाइश है।" : " कुल मिलाकर अनुभव संतोषजनक नहीं रहा और सुधार की जरूरत है।"}`;
   }
 
   if (data.language === "Gujarati") {
-    return `હું ${concern} માટે ${CLINIC_NAME} ગયો/ગઈ હતો/હતી. મારો overall rating experience ${avg.toFixed(1)}/5 રહ્યો. Doctor listening ${ratingTone(data.doctorApproachRating)} હતી, treatment experience ${ratingTone(data.treatmentEffectivenessRating)} રહ્યો, clinic cleanliness ${ratingTone(data.clinicAmbienceRating)} હતી, staff behavior ${ratingTone(data.staffBehaviorRating)} રહ્યો, અને value for money ${ratingTone(data.valueForMoneyRating)} લાગ્યું.${data.likedMost ? ` મને ખાસ કરીને ${data.likedMost} ગમ્યું.` : ""}${good ? " કુલ મળીને અનુભવ સારો રહ્યો." : mixed ? " કુલ અનુભવ મિશ્ર રહ્યો અને થોડો સુધારો થઈ શકે છે." : " કુલ અનુભવ સંતોષકારક નહોતો અને સુધારાની જરૂર છે."}`;
+    return `હું ${concern} માટે ${CLINIC_NAME} ગયો/ગઈ હતો/હતી. મારો overall rating experience ${avg.toFixed(1)}/5 રહ્યો. Doctor listening ${ratingTone(data.doctorApproachRating)} હતી, treatment experience ${ratingTone(data.treatmentEffectivenessRating)} રહ્યો, clinic cleanliness ${ratingTone(data.clinicAmbienceRating)} હતી, staff behavior ${ratingTone(data.staffBehaviorRating)} રહ્યો.${data.likedMost ? ` મને ખાસ કરીને ${data.likedMost} ગમ્યું.` : ""}${good ? " કુલ મળીને અનુભવ સારો રહ્યો." : mixed ? " કુલ અનુભવ મિશ્ર રહ્યો અને થોડો સુધારો થઈ શકે છે." : " કુલ અનુભવ સંતોષકારક નહોતો અને સુધારાની જરૂર છે."}`;
   }
 
   if (data.language === "Marathi") {
-    return `मी ${concern} साठी ${CLINIC_NAME} ला भेट दिली. माझा overall rating experience ${avg.toFixed(1)}/5 होता. Doctor listening ${ratingTone(data.doctorApproachRating)} वाटले, treatment experience ${ratingTone(data.treatmentEffectivenessRating)} होता, clinic cleanliness ${ratingTone(data.clinicAmbienceRating)} वाटली, staff behavior ${ratingTone(data.staffBehaviorRating)} होता, आणि value for money ${ratingTone(data.valueForMoneyRating)} वाटले.${data.likedMost ? ` ${data.likedMost} खास आवडले.` : ""}${good ? " एकूण अनुभव चांगला होता." : mixed ? " एकूण अनुभव मिश्र होता आणि काही सुधारणा होऊ शकतात." : " एकूण अनुभव समाधानकारक नव्हता आणि सुधारणा गरजेची आहे."}`;
+    return `मी ${concern} साठी ${CLINIC_NAME} ला भेट दिली. माझा overall rating experience ${avg.toFixed(1)}/5 होता. Doctor listening ${ratingTone(data.doctorApproachRating)} वाटले, treatment experience ${ratingTone(data.treatmentEffectivenessRating)} होता, clinic cleanliness ${ratingTone(data.clinicAmbienceRating)} वाटली, staff behavior ${ratingTone(data.staffBehaviorRating)} होता.${data.likedMost ? ` ${data.likedMost} खास आवडले.` : ""}${good ? " एकूण अनुभव चांगला होता." : mixed ? " एकूण अनुभव मिश्र होता आणि काही सुधारणा होऊ शकतात." : " एकूण अनुभव समाधानकारक नव्हता आणि सुधारणा गरजेची आहे."}`;
   }
 
   return englishReview(data);
@@ -274,7 +263,7 @@ Treatment effectiveness: ${data.treatmentEffectivenessRating}/5
 Doctor approach/listening: ${data.doctorApproachRating}/5
 Clinic cleanliness/ambience: ${data.clinicAmbienceRating}/5
 Staff behavior: ${data.staffBehaviorRating}/5
-Value for money: ${data.valueForMoneyRating}/5
+Value for money: ${}/5
 Visitor liked: ${data.likedMost || "not specified"}
 Extra instruction: ${instruction || "none"}
 Output only the review text.`;
@@ -374,8 +363,6 @@ function initialisePage() {
   buildStars("doctorApproachStars", "doctorApproachRating");
   buildStars("clinicAmbienceStars", "clinicAmbienceRating");
   buildStars("staffBehaviorStars", "staffBehaviorRating");
-  buildStars("valueForMoneyStars", "valueForMoneyRating");
-
   $("generateBtn")?.addEventListener("click", () => generate());
   $("freshBtn")?.addEventListener("click", () => generate("", true));
   $("rewriteBtn")?.addEventListener("click", () => generate(clean($("customInstruction")?.value), true));

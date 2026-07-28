@@ -1,18 +1,19 @@
-## Dr Rajna's Homeopathy Review Generator
+### Dr Rajna's Homeopathy Review Generator
 
-### Latest update
-- Combined the separate Copy Review and Post on Google buttons into one button.
-- New button text: Copy Review & Post on Google.
-- One click now copies the generated review and opens the Google review page.
-- Because browsers block automatic pasting into another website, the user still needs to click the Google review box and press Ctrl+V.
+#### Latest update
+- Removed Value for Money completely from the form and review logic.
+- Removed the extra hardcoded star from every rating label.
+- Fixed rating star rendering by using a JavaScript Unicode escape instead of a pasted star symbol.
+- Ratings now use 4 categories only.
+- Updated theme colors to #6F4BA0 and #573173.
+- Updated cache version to clinic-6.
 
-### Upload to GitHub Pages
-Upload these files directly to your repository root:
-
+#### Upload to GitHub Pages
+Upload these files directly to your repository root and replace existing files:
 - index.html
 - style.css
 - app.js
 - logo.png
 - README.md
 
-Do not upload the parent folder itself. Upload the files inside it.
+Important: upload the files themselves, not the folder.

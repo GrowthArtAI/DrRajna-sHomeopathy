@@ -5,8 +5,8 @@
   --clinic-card:rgba(255,255,255,.96);
   --clinic-text:#24312c;
   --clinic-muted:#66736d;
-  --clinic-primary:#967BB6;
-  --clinic-primary-2:#7F5AA2;
+  --clinic-primary:#6F4BA0;
+  --clinic-primary-2:#573173;
   --clinic-border:#d8c8e8;
   --clinic-soft:#f1e8f7;
   --clinic-star:#f5a000;
@@ -96,6 +96,7 @@ h2{font-size:24px}.desc{font-size:15px;color:var(--clinic-muted);margin:0;line-h
   background:transparent;
   color:var(--clinic-star-off);
   font-size:24px;
+  font-family:"Segoe UI Symbol", "Apple Color Emoji", Arial, sans-serif;
   line-height:1;
   cursor:pointer;
   user-select:none;
